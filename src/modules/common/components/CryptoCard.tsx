@@ -4,29 +4,33 @@ import { useCustomToast } from '../../../hooks/useCustomToast'
 import { useCallback, useState } from 'react'
 
 export const CryptoCard = () => {
-    const { notifyInfo, notifySuccess, notifyPromise } = useCustomToast()
+    const { notifyInfo, notifySuccess, notifyError } = useCustomToast()
     const [walletAddress, setWalletAddress] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [currentAmount, setCurrentAmount] = useState(0)
 
     const handleSubmit = useCallback(async (event: any) => {
-        event.preventDefault()
-        setIsSubmitting(true)
-        setTimeout(() => setIsSubmitting(false), 400)
-        const amount = (Math.ceil(100 * Math.random()) * 10000 / 1000000).toString()
-        // add amount to state
-        setCurrentAmount(currentAmount + +amount)
-        const res = await fetch(`/api/address/${walletAddress}?amount=${amount}`)
-        const { address, tx } = await res.json()
-        console.log(amount, address, tx)
-
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        // window.open(`https://shasta.tronscan.org/#/transaction/${tx}`, '_blank')
-        notifySuccess('Transaction requested successfully!')
-        notifyInfo(<span>Amount to be received: <a href={`https://shasta.tronscan.org/#/transaction/${tx as string}`}
-                                                   rel={'noreferrer'}
-                                                   target={'_blank'}><b><u>{amount} USDT</u></b></a></span>)
-        // throttle isSubmitting 200ms
+        try {
+            event.preventDefault()
+            setIsSubmitting(true)
+            setTimeout(() => setIsSubmitting(false), 400)
+            const amount = (Math.ceil(100 * Math.random()) * 10000 / 1000000).toString()
+            setCurrentAmount(currentAmount + +amount)
+            const res = await fetch(`/api/address/${walletAddress}?amount=${amount}`)
+            if(!res.ok) {
+                throw new Error('Failed to request transaction')
+            }
+            const { tx } = await res.json()
+            notifySuccess('Transaction requested successfully!')
+            notifyInfo(<span>Amount to be received: <a href={`https://shasta.tronscan.org/#/transaction/${tx as string}`}
+                                                       rel={'noreferrer'}
+                                                       target={'_blank'}><b><u>{amount} USDT</u></b></a></span>)
+        } catch (error: any) {
+            if (error.message) {
+                notifyError(error.message)
+            }
+            setIsSubmitting(false)
+        }
     }, [currentAmount, notifyInfo, notifySuccess, walletAddress])
 
     return (

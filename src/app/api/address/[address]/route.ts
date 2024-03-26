@@ -24,25 +24,25 @@ async function send_token(to_add: string, amount: string): Promise<string> {
 
 export async function GET(request: any, { params }: { params: { address: string } }) {
     try {
-        console.log('handler')
-        console.log(request)
         const { address } = params || {}
         const searchParams = request.nextUrl.searchParams;
         const amount = searchParams.get('amount');
         if (!address) {
             throw new Error('Address is required')
         }
-        const tx = await send_token(address, amount)
+        const tx = await send_token(address, amount).catch((e) => {
+            throw new Error(e)
+        })
         return NextResponse.json(
             {
                 amount,
                 address,
                 tx,
             }, { status: 200 });
-    } catch (error) {
+    } catch (error: any) {
         return NextResponse.json(
             {
-                error,
+                error: error.message,
             }, { status: 500 })
     }
 }
