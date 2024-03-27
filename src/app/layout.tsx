@@ -9,10 +9,23 @@ const nunito = Nunito({ subsets: ['latin'], display: 'swap' })
 
 export const metadata: Metadata = {
     title: 'El Dorado Testnet Faucet',
-    description: 'El Dorado Testnet Faucet',
+    description: 'A testnet faucet for developing purposes by El Dorado',
     icons: {
         icon: '/favicon.png',
     },
+    openGraph: {
+        title: 'El Dorado Testnet Faucet',
+        description: 'A testnet faucet for developing purposes by El Dorado',
+        images: '/favicon.png',
+        url: 'https://testnet-tron-faucet-phi.vercel.app/',
+    },
+    twitter: {
+        title: 'El Dorado Testnet Faucet',
+        description: 'A testnet faucet for developing purposes by El Dorado',
+        site: '@eldoradoio',
+        card: 'summary_large_image',
+        images: ['/favicon.png']
+    }
 }
 
 interface RootLayoutProps {
