@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: 'El Dorado Testnet Faucet',
         description: 'A testnet faucet for developing purposes by El Dorado',
-        images: '/favicon.png',
+        images: 'https://testnet-tron-faucet-phi.vercel.app/favicon.png',
         url: 'https://testnet-tron-faucet-phi.vercel.app/',
     },
     twitter: {
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
         description: 'A testnet faucet for developing purposes by El Dorado',
         site: '@eldoradoio',
         card: 'summary_large_image',
-        images: ['/favicon.png']
+        images: ['https://testnet-tron-faucet-phi.vercel.app/favicon.png']
     }
 }
 
