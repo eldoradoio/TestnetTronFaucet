@@ -42,7 +42,7 @@ export const CryptoCard = () => {
                         <span className="text-sm font-extrabold text-white">TRON-USDT</span>
                     </div>
                     <div className="mt-4 space-y-2">
-                        <input type="text" autoFocus required placeholder={'Enter wallet address'}
+                        <input type="text" autoFocus required placeholder={'Enter wallet address'} autoComplete="off"
                                className={'w-full py-[0.9rem] px-[2.5rem] text-xs md:text-[1.2rem] text-[#616161] rounded-2xl text-center focus:outline-none bg-[#F5F5F5] focus:bg-white'}
                                onChange={e => setWalletAddress(e.target.value)}
                         />
