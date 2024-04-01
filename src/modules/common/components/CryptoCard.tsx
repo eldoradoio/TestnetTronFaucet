@@ -14,8 +14,9 @@ export const CryptoCard = () => {
             event.preventDefault()
             setIsSubmitting(true)
             setTimeout(() => setIsSubmitting(false), 400)
-            const amount = (Math.ceil(100 * Math.random()) * 10000 / 1000000).toString()
-            setCurrentAmount(currentAmount + +amount)
+            // Amount to be received must be a random number between 0.500000 and 10.000000
+            const amount = ((Math.random() * (10 - 0.5) + 0.5)*1000000).toFixed(0)
+            setCurrentAmount(currentAmount + +amount/1000000)
             const res = await fetch(`/api/address/${walletAddress}?amount=${amount}`)
             if(!res.ok) {
                 throw new Error('Failed to request transaction')
