@@ -1,7 +1,7 @@
 'use client'
 import Image from 'next/image'
 import { useCustomToast } from '../../../hooks/useCustomToast'
-import { useCallback, useState } from 'react'
+import { type FormEvent, useCallback, useState } from 'react'
 
 export const CryptoCard = () => {
     const { notifyInfo, notifySuccess, notifyError } = useCustomToast()
@@ -9,7 +9,13 @@ export const CryptoCard = () => {
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [currentAmount, setCurrentAmount] = useState(0)
 
-    const handleSubmit = useCallback(async (event: any) => {
+    const checkResOk = (res: Response) => {
+        if (!res.ok) {
+            throw new Error('Failed to request transaction')
+        }
+    }
+
+    const handleSubmit = useCallback(async (event: FormEvent<HTMLFormElement>) => {
         try {
             event.preventDefault()
             setIsSubmitting(true)
@@ -18,24 +24,23 @@ export const CryptoCard = () => {
             const amount = ((Math.random() * (10 - 0.5) + 0.5)*1000000).toFixed(0)
             setCurrentAmount(currentAmount + +amount/1000000)
             const res = await fetch(`/api/address/${walletAddress}?amount=${amount}`)
-            if(!res.ok) {
-                throw new Error('Failed to request transaction')
-            }
+            checkResOk(res);
             const { tx } = await res.json()
             notifySuccess('Transaction requested successfully!')
             notifyInfo(<span>Amount to be received: <a href={`https://shasta.tronscan.org/#/transaction/${tx as string}`}
                                                        rel={'noreferrer'}
-                                                       target={'_blank'}><b><u>{amount} USDT</u></b></a></span>)
-        } catch (error: any) {
-            if (error.message) {
-                notifyError(error.message)
+                                                       target={'_blank'}><b><u>{(+amount/1000000).toFixed(2)} USDT</u></b></a></span>)
+        } catch (error) {
+            const { message } = (error as Error)
+            if (message) {
+                notifyError(message)
             }
             setIsSubmitting(false)
         }
-    }, [currentAmount, notifyInfo, notifySuccess, walletAddress])
+    }, [currentAmount, notifyError, notifyInfo, notifySuccess, walletAddress])
 
     return (
-        <form id={'wallet-form'} className={'flex items-center gap-[20px] mt-[20px] mb-[25px]'} onSubmit={handleSubmit}
+        <form id={'wallet-form'} className={'flex items-center gap-[20px] mt-[20px] mb-[25px]'} onSubmit={(event   ) => void handleSubmit(event)}
               spellCheck={false}>
             <div className="w-[350px] md:w-[500px] shadow-md overflow-hidden rounded-2xl bg-[#1F9977] relative">
                 <div className="p-4 relative z-20">
