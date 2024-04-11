@@ -40,7 +40,7 @@ export const CryptoCard = () => {
     }, [currentAmount, notifyError, notifyInfo, notifySuccess, walletAddress])
 
     return (
-        <form id={'wallet-form'} className={'flex items-center gap-[20px] mt-[20px] mb-[25px]'} onSubmit={void handleSubmit}
+        <form id={'wallet-form'} className={'flex items-center gap-[20px] mt-[20px] mb-[25px]'} onSubmit={(event   ) => void handleSubmit(event)}
               spellCheck={false}>
             <div className="w-[350px] md:w-[500px] shadow-md overflow-hidden rounded-2xl bg-[#1F9977] relative">
                 <div className="p-4 relative z-20">
